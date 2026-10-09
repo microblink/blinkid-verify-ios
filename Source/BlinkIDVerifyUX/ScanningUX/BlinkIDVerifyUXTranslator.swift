@@ -19,9 +19,10 @@ final class BlinkIDVerifyUXTranslator {
         var events: [UIEvent] = []
 
         if frameProcessResult.processResult?.resultCompleteness.scanningStatus == .scannedFirst && (!backSideDispatched && !passportDispatched) {
-            if let inputImageAnalysisResult = frameProcessResult.processResult?.frameAnalysisResult.extractionInputImageAnalysisResult, inputImageAnalysisResult.documentClassInfo.documentType == .passport {
+            if let inputImageAnalysisResult = frameProcessResult.processResult?.frameAnalysisResult.extractionInputImageAnalysisResult, inputImageAnalysisResult.documentClassInfo.documentType?.documentTypeId == .passport {
                 passportDispatched = true
-                if [Country.usa, Country.india].contains(inputImageAnalysisResult.documentClassInfo.country) {
+                if let countryId = inputImageAnalysisResult.documentClassInfo.country?.countryId,
+                   [CountryID.usa, CountryID.india].contains(countryId) {
                     events.append(.requestDocumentSide(side: .passportBarcode))
                 } else {
                     events.append(.requestDocumentSide(side: .passport(inputImageAnalysisResult.documentRotation.passportOrientation)))
@@ -54,7 +55,8 @@ final class BlinkIDVerifyUXTranslator {
         case .scanningWrongSide, .awaitingOtherSide:
             if passportDispatched,
                let extractionInputImageAnalysisResult = frameProcessResult.processResult?.frameAnalysisResult.extractionInputImageAnalysisResult {
-                if [Country.usa, Country.india].contains(extractionInputImageAnalysisResult.documentClassInfo.country) {
+                if let countryId = extractionInputImageAnalysisResult.documentClassInfo.country?.countryId,
+                   [CountryID.usa, CountryID.india].contains(countryId) {
                     events.append(.wrongSidePassportWithBarcode)
                 } else {
                     events.append(.wrongSidePassport(passportOrientation: extractionInputImageAnalysisResult.documentRotation.passportOrientation))
@@ -88,6 +90,9 @@ final class BlinkIDVerifyUXTranslator {
         }
         if frameProcessResult.processResult?.frameAnalysisResult.glareDetected == true {
             events.append(.glare)
+        }
+        if frameProcessResult.processResult?.frameAnalysisResult.screenPresenceDetected == true {
+            events.append(.screenDetected)
         }
         if frameProcessResult.processResult?.frameAnalysisResult.occlusionDetected == true {
             events.append(.occlusion)

@@ -56,6 +56,7 @@ protocol PassportAnimatable: AnyObject {
     func setReticleState(_ state: ReticleState, force: Bool)
     func pauseScanning()
     func resumeScanning()
+    func resetStepTimer()
 }
 
 // MARK: - Default Implementations
@@ -139,6 +140,7 @@ extension PassportAnimatable {
 
         passportState.showAnimation = false
 
+        resetStepTimer()
         resumeScanning()
         switch orientation {
         case .none:
@@ -163,7 +165,8 @@ extension PassportAnimatable {
         withAnimation(.linear(duration: 0.2)) {
             showSuccessImage = false
         }
-        
+
+        resetStepTimer()
         resumeScanning()
         setReticleState(.passport("mb_instructions_scan_barcode_last_page".localizedString), force: true)
     }

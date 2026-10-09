@@ -7,6 +7,7 @@
 # BlinkID Verify SDK
 
 The Document Verification SDK is a comprehensive solution for implementing secure document scanning and verification on iOS. It offers powerful capabilities for capturing, analyzing, and verifying a wide range of identification documents. The package consists of BlinkIDVerify, which serves as the core module, and an optional BlinkIDVerifyUX package that provides a complete, ready-to-use solution with a user-friendly interface.
+The list of all supported documents and result fields can be found [here](https://docs.microblink.com/verify/supported-documents).
 
 # Table of Contents
 
@@ -162,7 +163,7 @@ import BlinkIDVerify
 ```swift
 let settings = BlinkIDVerifySdkSettings(
     licenseKey: "your-license-key",
-    downloadResources: true
+    resourcesConfiguration: .init(download: true)
 )
 
 let sdk = try await BlinkIDVerifySdk.createBlinkIDVerifySdk(withSettings: settings)
@@ -201,11 +202,17 @@ import BlinkIDVerifyUX
 - Begin by creating an instance of the BlinkIDVerifyAnalyzer after initializing the capture session:
 
 ```swift
-let analyzer = await BlinkIDVerifyAnalyzer(
+let analyzer = try await BlinkIDVerifyAnalyzer(
     sdk: sdk,
+    consentConfig: .setConsentWithUi(userId: "your-unique-user-id"),
     eventStream: BlinkIDVerifyEventStream()
 )
 ```
+
+- `consentConfig` decides how the end user's consent is obtained. BlinkID Verify Cloud rejects any request without one:
+    - `.setConsentWithUi(userId:durationDays:note:)` shows a consent sheet over the scanning screen, and no frame is analyzed until the user answers. `note` is shown on a new line below the sheet's text.
+    - `.provideExternalConsent(userId:durationDays:)` attaches consent you collected in your own UI.
+    - `.noConsentNeeded` sends none, for self-hosted deployments, which manage consent themselves.
 
 2. Create a ScanningUXModel:
 
@@ -274,63 +281,67 @@ The Backend API analyzes scanned images and performs a multitude of checks on va
 
 Leverage our backend API for verification, which allows seamless integration and powerful server-side processing for advanced verification checks.
 
-> Full BlinkID Verify API guide can be found [here](https://blinkidverify.docs.microblink.com/docs/api/request/).
+> The full v3 API reference is at [docs.microblink.com](https://docs.microblink.com/verify/api/ref/v3-cloud). If you are moving from v2, see the [v3 migration guide](https://docs.microblink.com/verify/migrate-v3).
 
-After obtaining a `DocumentCaptureResult` by following this guide, you need to pass it to the backend API for further verification and processing. Let’s follow the steps one by one to ensure a seamless integration:
+The SDK builds the complete v3 request on the device: the scanning session serializes your verification settings into it, so the settings you scan with are the settings the API verifies with. After capturing a document, pass that request to the backend API:
 
-1. You need to create a `BlinkIDVerifyService` object, which should be initialized with a `BlinkIDVerifyServiceSettings` object providing your access client id and secret:
+1. Configure verification before scanning. The settings live on the session rather than on the request:
+
+```swift
+var sessionSettings = BlinkIDVerifySessionSettings(traceId: "your-transaction-id")
+sessionSettings.scanningSettings.useCase = VerificationUseCase(verificationPolicy: .highAssurance)
+sessionSettings.scanningSettings.verificationSettings = VerificationSettings(
+    screenPresenceSensitivity: .level5,
+    rejectExpiredDocuments: true
+)
+sessionSettings.scanningSettings.faceImageExtractionEnabled = true
+
+let session = try await sdk.createScanningSession(sessionSettings: sessionSettings)
+```
+
+2. Once scanning finishes, take the result together with your user's consent. BlinkID Verify Cloud rejects any request without one; self-hosted deployments manage consent themselves and can omit it:
+
+```swift
+let consent = BlinkIDVerifyConsent(
+    durationDays: 365,
+    userId: "your-unique-user-id",
+    note: "Accepted consent text",
+    givenOn: Date()
+)
+let captureResult = await session.getResult(consent: consent)
+```
+
+3. Create a `BlinkIDVerifyService` with your regional host and the client ID and secret issued for your account. It authenticates with HTTP Basic:
 
 ```swift
 let blinkIdVerifySettings = BlinkIDVerifyServiceSettings(
-    verificationServiceBaseUrl: "docver.microblink.com", 
-    accessClientId: "your-access-client-id", 
+    verificationServiceBaseUrl: "us-east.verify.microblink.com",
+    accessClientId: "your-access-client-id",
     accessClientSecret: "your-client-secret")
- 
-let blinkIdVerifyService = BlinkIDVerifyService(settings: blinkIdVerifySettings)   
+
+let blinkIdVerifyService = BlinkIDVerifyService(settings: blinkIdVerifySettings)
 ```
 
-2. a) You need to create a BlinkIDVerifyRequest providing the images of the document sides (either in the form of an UIImage or a url):
+Pass the host alone, without `https://`. For a self-hosted deployment, which needs no credentials, use `BlinkIDVerifyServiceSettings(verificationServiceBaseUrl:)`.
+
+4. Send the request. `payload` is `nil` only when the session captured no frames:
 
 ```swift
- let frontImage = UIImage(named: "front")
- let frontImageSource = ImageSource(image: frontImage)
+guard let payload = captureResult.payload else { return }
 
- let backImage = UIImage(named: "back")
- let backImageSource = ImageSource(image: backImage) 
-
- // alternatively we also could initialize the ImageSource object using and URL with the ImageSource(imageUrl: String) initializer
-
- let blinkIdVerifyRequest = BlinkIDVerifyRequest(imageFront: frontImageSource, imageBack: backImageSource)
+do {
+    let response = try await blinkIdVerifyService.verify(payload: payload)
+} catch RequestError.validation(let rejection) {
+    // The API names each offending parameter, such as a missing consent.
+    print(rejection)
+} catch RequestError.rateLimited(let retryAfter) {
+    // Out of capacity: retry after `retryAfter` seconds when the API suggests a delay.
+}
 ```
 
-2. b) We provide `toBlinkIDVerifyRequest()` on `BlinkIDVerifyCaptureResult` that converts the capture result into a document verification request. This method creates a complete verification request using the captured images:
+The result is a `BlinkIDVerifyEndpointResponse`, which mirrors the v3 response. Start from `verification.verdict`. When it is not `.accept`, `verification.failedChecks` names each failing check by its path through `verification.checks`, and `messages` explains it in a form you can show the user; do not drive logic off messages. `pipeline` reports the extraction and verification stages separately, and `extraction.result` holds the data read off the document.
 
-```swift
-var blinkIdVerifyRequest = result.toBlinkIDVerifyRequest()
-```
-
-3. We can modify the request to include additional information that the response should contain, for example:
-
-```swift
-var options = BlinkIDVerifyProcessingOptions()
-options.returnFullDocumentImage = true
-options.returnFaceImage = true
-options.returnSignatureImage = true
-
-var useCase = BlinkIDVerifyProcessingUseCase()
-useCase.documentVerificationPolicy = .strict
-
-blinkIdVerifyRequest.options = options
-blinkIdVerifyRequest.useCase = useCase
-```
-
-4. Finally use `blinkIdVerifyService.verify()` to send the request and fetch the response. This method will either throw a `RequestError` or return the result of the verification process.
-
-```swift
-let result = try await blinkIdVerifyService.verify(blinkIdVerifyRequest: blinkIdVerifyRequest)
-```
-
-The result of our API call is of type `BlinkIDVerifyEndpointResponse`, making it straightforward to access detailed verification results, including processing status, checks, extracted data, and runtime information, all adhering to a structured and predictable format that follows our [BlinkID Verify API guide](https://blinkidverify.docs.microblink.com/docs/api/request/). 
+v3 values such as verdicts and check results are open: the API can add one without a new SDK release. Match against the values you know and give every `switch` a `default`.
 
 ## <a name="BlinkIDVerify-components"></a> BlinkIDVerify Components
 
@@ -341,7 +352,7 @@ The `BlinkIDVerifySdk` class serves as the main entry point for document verific
 ```swift
 let settings = BlinkIDVerifySdkSettings(
     licenseKey: "your-license-key",
-    downloadResources: true
+    resourcesConfiguration: .init(download: true)
 )
 
 do {
@@ -397,13 +408,13 @@ Processes an input image and provides detailed analysis results. This method:
 
 ```swift
 @ProcessingActor
-public func getResult() -> BlinkIDVerifyCaptureResult
+public func getResult(consent: BlinkIDVerifyConsent? = nil) -> BlinkIDVerifyCaptureResult
 ```
 
-Retrieves the final results of the capture session, including:
+Retrieves the final result of the capture session, including:
 - All captured images
-- Verification results
-- Session metadata
+- `payload`, the complete v3 request built from them, including `consent`
+- The capture session ID
 - Must be called within the ProcessingActor context
 
 #### Usage Example
@@ -665,16 +676,16 @@ The SDK supports both downloaded and bundled resources:
 
 The SDK supports downloading machine learning models from our CDN. Models are automatically retrieved from https://models.cdn.microblink.com/resources when enabled.
 
-To enable model downloads, set the downloadResources property to true in your `BlinkIDVerifySdkSettings`:
+To enable model downloads, set the `download` property of the `resourcesConfiguration` in your `BlinkIDVerifySdkSettings`:
 
 ```swift
 let settings = BlinkIDVerifySdkSettings(
     licenseKey: yourLicenseKey,
-    downloadResources: true  // Enable model downloads
+    resourcesConfiguration: .init(download: true)  // Enable model downloads
 )
 ```
 
-By default, downloaded models are stored in the `MLModels` folder. You can specify a custom storage location using the `resourceLocalFolder` property in the settings.
+By default, downloaded models are stored in the `MLModels` folder. You can specify a custom storage location using the `localFolder` property of `ResourcesConfig`.
 
 Model downloads occur during SDK initialization in the `createBlinkIDVerifySdk` method:
 
@@ -730,10 +741,13 @@ public struct NoInternetView: View {
 
 #### Bundling models
 
-To use bundled models with our SDK, ensure the required model files are included in your app package and set the `downloadResources` property of `BlinkIDVerifySdkSettings` to `false`. Specify the location of the bundled models using the `bundleURL` property of `BlinkIDVerifySdkSettings`. If you are using the main bundle, you can retrieve its URL as follows:
+To use bundled models with our SDK, ensure the required model files are included in your app package and set the `download` property of `ResourcesConfig` to `false`. Specify the location of the bundled models using its `bundleUrl` property. If you are using the main bundle, you can retrieve its URL as follows:
 
 ```swift
-let bundle = Bundle.main.bundleURL
+let settings = BlinkIDVerifySdkSettings(
+    licenseKey: yourLicenseKey,
+    resourcesConfiguration: .init(download: false, bundleUrl: Bundle.main.bundleURL)
+)
 ```
 
 ## <a name="BlinkIDVerify-ux-components"></a> BlinkIDVerify UX Components
@@ -794,9 +808,10 @@ public actor BlinkIDVerifyAnalyzer: CameraFrameAnalyzer {
 let eventStream = BlinkIDVerifyEventStream()
 
 // Initialize the analyzer
-let analyzer = await BlinkIDVerifyAnalyzer(
+let analyzer = try await BlinkIDVerifyAnalyzer(
     sdk: blinkIDVerifySdk,
-    captureSessionSettings: CaptureSessionSettings(capturePolicy: .video),
+    blinkIdVerifySessionSettings: BlinkIDVerifySessionSettings(inputImageSource: .video),
+    consentConfig: .provideExternalConsent(userId: "your-unique-user-id", durationDays: 365),
     eventStream: eventStream
 )
 ```
@@ -1186,8 +1201,10 @@ VStack {
 In this section, we will demonstrate how to establish the connection between the ViewModel and the View to facilitate a seamless document verification workflow:
 
 ```swift
-let analyzer = await BlinkIDVerifyAnalyzer(
+// Your own UI has no consent sheet, so collect consent there and pass it in.
+let analyzer = try await BlinkIDVerifyAnalyzer(
     sdk: localSdk,
+    consentConfig: .provideExternalConsent(userId: "your-unique-user-id", durationDays: 365),
     eventStream: BlinkIDVerifyEventStream()
 )
 
@@ -1208,9 +1225,7 @@ And that's it! You have created a custom SwiftUI View and ViewModel!
 
 ## <a name="localization"></a> Localization
 
-Our app supports localization following Apple’s recommended approach. We provide a `Localizable.xcstrings` file that you can use or modify as needed. Localization is determined by the system settings, meaning you must define 
-supported languages in your app’s `Info.plist` under the `Localizations` key, ensuring all required keys are included. Once configured, users can change the app’s language via Settings > [App Name] > Language. Note that in-app 
-language switching is not supported, as we adhere to Apple’s intended localization flow.
+Our app supports localization following Apple’s recommended approach. We provide a `Localizable.xcstrings` file that you can use or modify as needed. Localization is determined by the system settings, meaning you must define supported languages in your app’s `Info.plist` under the `Localizations` key, ensuring all required keys are included. Once configured, users can change the app’s language via Settings > [App Name] > Language. Note that in-app language switching is not supported, as we adhere to Apple’s intended localization flow.
 
 ### <a name="custom-translations"></a> Providing your own translations
 
@@ -1219,14 +1234,14 @@ If you want to override some or all of the SDK's built-in strings — for exampl
 Add the keys you want to override (the SDK's string keys are prefixed with `mb_`, e.g. `mb_back_instructions`) to your app's `Localizable.xcstrings` (or a dedicated `.strings`/`.stringsdict` table), then configure the theme before presenting the scanning UI:
 
 ```swift
-import BlinkIDUX
+import BlinkIDVerifyUX
 
 // Load overrides from your app's main bundle.
-BlinkIDTheme.shared.localizationBundle = .main
+BlinkIDVerifyTheme.shared.localizationBundle = .main
 
-// Optional: if your overrides live in a dedicated table (e.g. BlinkIDStrings.xcstrings),
+// Optional: if your overrides live in a dedicated table (e.g. BlinkIDVerifyStrings.xcstrings),
 // set its name here. Leave it as nil to use the default `Localizable` table.
-BlinkIDTheme.shared.localizationTableName = "BlinkIDStrings"
+BlinkIDVerifyTheme.shared.localizationTableName = "BlinkIDVerifyStrings"
 ```
 
 For every string, the SDK first looks up the key in `localizationBundle` and falls back to its own built-in translation when the key isn't found — so you only need to provide the strings you actually want to change. Set `localizationBundle` back to `nil` to restore the SDK's own translations.
@@ -1236,10 +1251,10 @@ For every string, the SDK first looks up the key in `localizationBundle` and fal
 By default the SDK follows the device's system language. If you want to display the scanning UI in a specific language regardless of the device settings — for example to let users switch language from within your app — set the language on the theme:
 
 ```swift
-import BlinkIDUX
+import BlinkIDVerifyUX
 
-BlinkIDTheme.shared.language = "de"   // force German
-// BlinkIDTheme.shared.language = nil // follow the system language (default)
+BlinkIDVerifyTheme.shared.language = "de"   // force German
+// BlinkIDVerifyTheme.shared.language = nil // follow the system language (default)
 ```
 
 The language must be present in the SDK's bundled translations (or in your `localizationBundle`); if it isn't, the SDK falls back to the system language. Right-to-left languages (Arabic, Hebrew, …) automatically flip the scanning UI's layout direction.

@@ -1,0 +1,27 @@
+filegroup(
+    name = "BlinkIDUXSources",
+    srcs = glob([
+        "**/*.swift",
+    ]),
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "BlinkIDUXAssets",
+    srcs = glob(
+        include = [
+            "**/*.xcassets/**",
+        ], exclude = [
+            "**/.DS_Store",
+        ]
+    ),
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "BlinkIDUXLocalization",
+    srcs = [
+        "Localizable.xcstrings",
+    ],
+    visibility = ["//visibility:public"],
+)

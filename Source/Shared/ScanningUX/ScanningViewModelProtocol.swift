@@ -6,16 +6,17 @@
 //
 
 import AVFoundation
+import AudioToolbox
 import Foundation
 import CoreImage
 import SwiftUI
 import Combine
 
-#if canImport(BlinkIDVerify)
+#if BLINKIDVERIFYUX
 import BlinkIDVerify
-#elseif canImport(BlinkID)
+#elseif BLINKIDUX
 import BlinkID
-#elseif canImport(BlinkCard)
+#elseif BLINKCARDUX
 import BlinkCard
 #endif
 
@@ -51,6 +52,7 @@ protocol ScanningViewModelProtocol: ObservableObject {
     func pauseScanning()
     func resumeScanning()
     func restartScanning()
+    func resetStepTimer()
     func licenseErrorAlertDismised()
     func presentAlert()
     func dismissAlert()
@@ -211,6 +213,15 @@ public class ScanningViewModel<T, U, V: ReticleStateMachineProtocol, A: AlertTyp
     let showDemoOverlayImage: Bool
     let showProductionOverlayImage: Bool
     
+    // MARK: - sound
+    private let scanBeepID: SystemSoundID = {
+        var id: SystemSoundID = 0
+        if let url = Bundle.frameworkBundle.url(forResource: "MBbeep", withExtension: "wav") {
+            AudioServicesCreateSystemSoundID(url as CFURL, &id)
+        }
+        return id
+    }()
+    
     /// Initializes a new scanning UX model with the specified document analyzer.
     /// - Parameter analyzer: The analyzer responsible for processing camera frames and detecting documents.
     /// - Parameter uxSettings: Settings used for scanning.
@@ -245,7 +256,7 @@ public class ScanningViewModel<T, U, V: ReticleStateMachineProtocol, A: AlertTyp
         await analyzer.resume()
 
         for await frame in await camera.sampleBuffer {
-            await analyzer.analyze(image: CameraFrame(buffer: MBSampleBufferWrapper(cmSampleBuffer: frame.buffer), roi: roi, orientation: camera.orientation.toCameraFrameVideoOrientation()))
+            await analyzer.analyze(image: CameraFrame(buffer: frame.buffer, roi: roi, orientation: camera.orientation.toCameraFrameVideoOrientation()))
         }
     }
     
@@ -292,6 +303,9 @@ public class ScanningViewModel<T, U, V: ReticleStateMachineProtocol, A: AlertTyp
     }
     
     public func pauseScanning() {
+        cancelTooltipTimer()
+        hideTooltipInvoked()
+        
         Task {
             await analyzer.pause()
         }
@@ -314,6 +328,12 @@ public class ScanningViewModel<T, U, V: ReticleStateMachineProtocol, A: AlertTyp
             try await analyzer.restart()
             reticleStateMachine.setInitialState()
             await camera.start()
+        }
+    }
+
+    public func resetStepTimer() {
+        Task {
+            await analyzer.resetStepTimer()
         }
     }
     
@@ -350,18 +370,14 @@ public class ScanningViewModel<T, U, V: ReticleStateMachineProtocol, A: AlertTyp
     // MARK: - Tooltip Management
     
     func startTooltipTimer() {
+        guard uxSettings.helpTooltipShowDelay > 0 else { return }
+        
         showTooltipTimer?.invalidate()
         showTooltip = false
         
         Task {
-            var interval = await analyzer.stepTimeoutDuration / 2.0
-            
-            if interval <= 0 {
-                interval = 8.0
-            }
-            
             await MainActor.run {
-                showTooltipTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: false, block: { [weak self] _ in
+                showTooltipTimer = Timer.scheduledTimer(withTimeInterval: uxSettings.helpTooltipShowDelay, repeats: false, block: { [weak self] _ in
                     Task {
                         await self?.showTooltipInvoked()
                     }
@@ -385,7 +401,9 @@ public class ScanningViewModel<T, U, V: ReticleStateMachineProtocol, A: AlertTyp
     
     @MainActor
     private func startHideTooltipTimer() {
-        hideTooltipTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: false, block: { [weak self] _ in
+        guard uxSettings.helpTooltipHideDelay > 0 else { return }
+        
+        hideTooltipTimer = Timer.scheduledTimer(withTimeInterval: uxSettings.helpTooltipHideDelay, repeats: false, block: { [weak self] _ in
             Task {
                 await self?.hideTooltipInvoked()
             }
@@ -431,6 +449,11 @@ public class ScanningViewModel<T, U, V: ReticleStateMachineProtocol, A: AlertTyp
         if uxSettings.allowHapticFeedback {
             UINotificationFeedbackGenerator().notificationOccurred(.success)
         }
+        
+        if uxSettings.allowScanSound {
+            AudioServicesPlaySystemSound(scanBeepID)
+        }
+        
         cardImage = frontFlipImage
         UIAccessibility.post(notification: .announcement, argument: firstSideFinishedText)
         showSuccessImage = true
@@ -473,6 +496,7 @@ public class ScanningViewModel<T, U, V: ReticleStateMachineProtocol, A: AlertTyp
 
         showCardImage = false
         flipCardDegrees = 180.0
+        resetStepTimer()
         resumeScanning()
         setReticleState(nextState, force: true)
     }
@@ -480,6 +504,9 @@ public class ScanningViewModel<T, U, V: ReticleStateMachineProtocol, A: AlertTyp
     private func animateSuccess() async {
         if uxSettings.allowHapticFeedback {
             UINotificationFeedbackGenerator().notificationOccurred(.success)
+        }
+        if uxSettings.allowScanSound {
+            AudioServicesPlaySystemSound(scanBeepID)
         }
         showSuccessImage = true
         UIAccessibility.post(notification: .announcement, argument: scanFinishedText)

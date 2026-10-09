@@ -1,0 +1,15 @@
+filegroup(
+    name = "BlinkIDVerifyUXSources",
+    srcs = glob([
+        "**/*.swift",
+    ]),
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "BlinkIDVerifyUXLocalization",
+    srcs = [
+        "Localizable.xcstrings",
+    ],
+    visibility = ["//visibility:public"],
+)

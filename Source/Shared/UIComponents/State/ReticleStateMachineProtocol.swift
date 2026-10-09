@@ -21,7 +21,6 @@ public protocol ReticleStateMachineProtocol: ObservableObject {
     func forcedState(state: ReticleStateType)
     func setInitialState()
     func calculateRemainingTime(stateDuration: Double?) -> Double
-    func resetCustomProperties()
 }
 
 extension ReticleStateMachineProtocol {
@@ -67,14 +66,5 @@ extension ReticleStateMachineProtocol {
         } else {
             return reticleState.duration - elapsedTime
         }
-    }
-    
-    public func setInitialState() {
-        reticleState = .initialState
-        reticleStateIsInterruptible = false
-        fallbackState = reticleState
-        lastReticleStateChange = Date().timeIntervalSince1970
-        eventCounter.removeAll()
-        resetCustomProperties()
     }
 }

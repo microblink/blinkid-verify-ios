@@ -42,4 +42,56 @@ extension Image {
     static var passportTopImage: Image {
         Image("passport_top", bundle: Bundle.frameworkBundle)
     }
+    
+    static var harshLightBarcodeImage: Image {
+        Image("harsh_light_barcode", bundle: Bundle.frameworkBundle)
+    }
+    
+    static var keepBarcodeVisibleIdImage: Image {
+        Image("keep_barcode_visible_id", bundle: Bundle.frameworkBundle)
+    }
+    
+    static var keepBarcodeVisibleImage: Image {
+        Image("keep_barcode_visible", bundle: Bundle.frameworkBundle)
+    }
+    
+    static var keepStillBarcodeImage: Image {
+        Image("keep_still_barcode", bundle: Bundle.frameworkBundle)
+    }
+    
+    static var locateBarcodeIdImage: Image {
+        Image("locate_barcode_id", bundle: Bundle.frameworkBundle)
+    }
+    
+    static var locateBarcodeImage: Image {
+        Image("locate_barcode", bundle: Bundle.frameworkBundle)
+    }
+    
+    static var locateMrzIdImage: Image {
+        Image("locate_mrz_id", bundle: Bundle.frameworkBundle)
+    }
+    
+    static var keepMrzVisibleImage: Image {
+        Image("keep_mrz_visible_id", bundle: Bundle.frameworkBundle)
+    }
+
+    static var passportOnboardingImage: Image {
+        Image("passport_onboarding", bundle: Bundle.frameworkBundle)
+    }
+
+    static var passportHelpShowDataImage: Image {
+        Image("passport_help_show_data", bundle: Bundle.frameworkBundle)
+    }
+
+    static var passportAllFieldsVisibleImage: Image {
+        Image("passport_all_fields_visible", bundle: Bundle.frameworkBundle)
+    }
+
+    static var passportHarshLightImage: Image {
+        Image("passport_harsh_light", bundle: Bundle.frameworkBundle)
+    }
+
+    static var passportKeepStillImage: Image {
+        Image("passport_keep_still", bundle: Bundle.frameworkBundle)
+    }
 }

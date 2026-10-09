@@ -111,8 +111,9 @@ let recognizerRunnerViewController = MBViewControllerFactory.recognizerRunnerVie
 
 ```swift
 // Using BlinkIDVerifyUX
-let analyzer = await BlinkIDVerifyAnalyzer(
+let analyzer = try await BlinkIDVerifyAnalyzer(
     sdk: sdk,
+    consentConfig: .setConsentWithUi(userId: "your-unique-user-id"),
     eventStream: BlinkIDVerifyEventStream()
 )
 

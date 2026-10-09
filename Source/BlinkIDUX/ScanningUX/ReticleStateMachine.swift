@@ -9,15 +9,24 @@ import Foundation
 public class ReticleStateMachine: ReticleStateMachineProtocol {
     public typealias ReticleStateType = ReticleState
     
-    @Published public var reticleState: ReticleState = .initialState
-    public var fallbackState: ReticleState = .initialState
-    public var lastReticleStateChange: TimeInterval = Date().timeIntervalSince1970
-    public var eventCounter: [ReticleState : Int] = [:]
-    public var reticleStateIsInterruptible: Bool = false
-    private var lastPassportErrorOrientation: PassportOrientation? = nil
+    @Published public var reticleState: ReticleState
+    public var fallbackState: ReticleState
+    public var lastReticleStateChange: TimeInterval
+    public var eventCounter: [ReticleState : Int]
+    public var reticleStateIsInterruptible: Bool
+    private var lastPassportErrorOrientation: PassportOrientation?
     
-    public func resetCustomProperties() {
-        lastPassportErrorOrientation = nil
+    private let extractionMode: BlinkIDExtractionMode?
+    
+    public init(extractionMode: BlinkIDExtractionMode?) {
+        self.extractionMode = extractionMode
+        let initialState = Self.getInitialState(extractionMode: extractionMode)
+        self.reticleState = initialState
+        self.fallbackState = initialState
+        self.lastReticleStateChange = Date().timeIntervalSince1970
+        self.eventCounter = [:]
+        self.reticleStateIsInterruptible = false
+        self.lastPassportErrorOrientation = nil
     }
     
     public func calculateState(using mostFrequentState: ReticleState) -> ReticleState {
@@ -58,5 +67,32 @@ public class ReticleStateMachine: ReticleStateMachineProtocol {
                 lastPassportErrorOrientation = .right90
             }
         }
+    }
+    
+    private static func getInitialState(extractionMode: BlinkIDExtractionMode?) -> ReticleState {
+        guard let extractionMode = extractionMode else {
+            return .front
+        }
+        
+        switch extractionMode {
+        case .barcodeOnly:
+            return .barcode
+        case .documentWithBarcode:
+            return .barcodeSide
+        case .fullDocument:
+            return .front
+        case .documentWithMrz:
+            return .mrzSide
+        case .passportOnly:
+            return .passportDataPage
+        }
+    }
+    
+    public func setInitialState() {
+        reticleState = Self.getInitialState(extractionMode: self.extractionMode)
+        reticleStateIsInterruptible = false
+        fallbackState = reticleState
+        lastReticleStateChange = Date().timeIntervalSince1970
+        eventCounter.removeAll()
     }
 }
