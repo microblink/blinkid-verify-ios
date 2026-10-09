@@ -40,15 +40,11 @@ struct VerificationResultView : View {
                     alignment: .center,
                     spacing: 10.0
                 ) {
-                    if let images = verificationResult.images {
-                        ForEach(images, id: \.name) { imageResult in
-                            if let image = imageResult.image {
-                                Text(imageResult.name)
-                                Image(uiImage: image)
-                                    .resizable()
-                                    .aspectRatio(contentMode: .fit)
-                            }
-                        }
+                    ForEach(returnedImages) { returned in
+                        Text(returned.name)
+                        Image(uiImage: returned.image)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
                     }
                     
                     ScrollView {
@@ -62,4 +58,28 @@ struct VerificationResultView : View {
             }
         }
     }
+    
+    /// The images the API returned, decoded from base64.
+    private var returnedImages: [ReturnedImage] {
+        guard let images = verificationResult.images else { return [] }
+        let all: [(String, String?)] = [
+            ("First side", images.firstSideCropped),
+            ("Second side", images.secondSideCropped),
+            ("Face", images.face),
+            ("Signature", images.signature),
+            ("Barcode", images.barcode),
+        ]
+        return all.compactMap { name, base64 in
+            guard let base64,
+                  let data = Data(base64Encoded: base64, options: .ignoreUnknownCharacters),
+                  let image = UIImage(data: data) else { return nil }
+            return ReturnedImage(name: name, image: image)
+        }
+    }
+}
+
+private struct ReturnedImage: Identifiable {
+    let name: String
+    let image: UIImage
+    var id: String { name }
 }
