@@ -19,6 +19,9 @@ public enum UIEvent: Equatable, Sendable {
     
     /// Light reflection is interfering with document capture
     case glare
+
+    /// The document is being shown on a screen rather than presented physically
+    case screenDetected
     
     /// Part of document is occluded
     case occlusion
@@ -52,4 +55,10 @@ public enum UIEvent: Equatable, Sendable {
     
     /// Document currently not supported by the recognizer
     case unsupportedDocument
+    
+    /// Indicates that the encountered barcode is not parsable
+    case unparsableBarcode
+    
+    /// Trouble reading barcode
+    case undetectedBarcode
 }

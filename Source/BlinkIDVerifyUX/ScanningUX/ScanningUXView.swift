@@ -17,7 +17,20 @@ public struct ScanningUXView: View, ScanningUXProtocol, PassportAnimatableView {
     typealias UXModel = ScanningUXModel
     typealias EventType = UIEvent
     typealias ReticleStateMachineType = ReticleStateMachine
-    typealias OnboardingStepType = OnboardingStep
+
+    // TODO: copied from BlinkID UX just to enable building, needs to be implemented properly
+    var onboardingSteps: [any OnboardingStepProtocol] {
+        return Array(FullDocumentOnboardingStep.allCases)
+    }
+
+    // TODO: copied from BlinkID UX just to enable building, needs to be implemented properly
+    var onboardingAlert: OnboardingAlertContent {
+        return OnboardingAlertContent(
+            title: "mb_onboarding_dialog_title",
+            description: "mb_onboarding_dialog_message",
+            image: Image.allDetailsVisibleImage
+        )
+    }
 
     @ObservedObject var viewModel: ScanningUXModel
             
@@ -28,7 +41,21 @@ public struct ScanningUXView: View, ScanningUXProtocol, PassportAnimatableView {
     }
 
     public var body: some View {
-        MainView(reticleStateMachine: viewModel.reticleStateMachine, isTorchOn: $viewModel.isTorchOn, showToast: $viewModel.isToastVisible, showSheet: $viewModel.showSheet, showLicenseErrorAlert: $viewModel.showLicenseErrorAlert, onboardingAlertTitle: "mb_onboarding_dialog_title", onboardingAlertDescription: "mb_onboarding_dialog_message", onboardingAlertImage: Image.allDetailsVisibleImage, timeoutAlertDescription: "mb_recognition_timeout_dialog_message".localizedString, flashlightWarningMessage: "mb_flashlight_warning_message".localizedString)
+        MainView(reticleStateMachine: viewModel.reticleStateMachine, isTorchOn: $viewModel.isTorchOn, showToast: $viewModel.isToastVisible, showSheet: $viewModel.showSheet, showLicenseErrorAlert: $viewModel.showLicenseErrorAlert, flashlightWarningMessage: "mb_flashlight_warning_message".localizedString)
+            .onAppear { viewModel.presentConsentIfNeeded() }
+            .sheet(isPresented: $viewModel.showConsent) {
+                BlinkIDVerifyConsentView(
+                    note: viewModel.consentNote,
+                    onConsent: { optimizationConsent in
+                        viewModel.consentGranted(optimizationConsent: optimizationConsent)
+                    },
+                    onDecline: {
+                        viewModel.consentDeclined()
+                    }
+                )
+                // Consent cannot be swiped away: dismissing it has to be an answer.
+                .interactiveDismissDisabled()
+            }
     }
 }
 

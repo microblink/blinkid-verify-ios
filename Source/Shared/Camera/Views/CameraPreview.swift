@@ -38,6 +38,9 @@ public struct CameraPreview: UIViewRepresentable {
         
         init() {
             super.init(frame: .zero)
+            if #available(iOS 26.0, *) {
+                previewLayer.isDeferredStartEnabled = false
+            }
     #if targetEnvironment(simulator)
             // The capture APIs require running on a real device. If running
             // in Simulator, display a static image to represent the video feed.
@@ -71,6 +74,7 @@ public struct CameraPreview: UIViewRepresentable {
         nonisolated public func setSession(_ session: AVCaptureSession) {
             // Connects the session with the preview layer, which allows the layer
             // to provide a live view of the captured content.
+            
             Task { @MainActor in
                 previewLayer.session = session
             }

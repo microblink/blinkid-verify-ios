@@ -53,7 +53,7 @@ public final class BlinkIDTheme: UXThemeProtocol {
     
     // Toast
     public var toastBackgroundColor: Color = .mbToastBackground
-    
+
     // MARK: - Custom localization
 
     /// A bundle from the host app containing translations that override the SDK's
@@ -94,5 +94,4 @@ public final class BlinkIDTheme: UXThemeProtocol {
         get { Bundle.languageOverride }
         set { Bundle.languageOverride = newValue }
     }
-
 }

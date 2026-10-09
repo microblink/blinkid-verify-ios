@@ -3,9 +3,9 @@
 //  This code is provided for use as-is and may not be copied, modified, or redistributed.
 //
 
-#if canImport(BlinkIDVerify)
+#if BLINKIDVERIFYUX
 import BlinkIDVerify
-#elseif canImport(BlinkID)
+#elseif BLINKIDUX
 import BlinkID
 #endif
 
@@ -17,6 +17,11 @@ public enum BlinkIDScanningAlertType: Int, Sendable, AlertTypeProtocol {
     case timeout
     /// Class was filtered out with ClassFilter.
     case disallowedClass
+    /// Scanned document currently not supported by the recognizer
+    case unsupportedDocument
+    case inactivityTimeout
+    case unsupportedBarcodeTimeout
+    
     
     public var title: String {
         switch self {
@@ -24,6 +29,12 @@ public enum BlinkIDScanningAlertType: Int, Sendable, AlertTypeProtocol {
             return "mb_recognition_timeout_dialog_title".localizedString
         case .disallowedClass:
             return "mb_document_class_filtered_dialog_title".localizedString
+        case .unsupportedDocument:
+            return "mb_unsupported_document_title".localizedString
+        case .inactivityTimeout:
+            return "mb_recognition_timeout_dialog_title".localizedString
+        case .unsupportedBarcodeTimeout:
+            return "mb_recognition_timeout_dialog_title".localizedString
         }
     }
     
@@ -33,12 +44,18 @@ public enum BlinkIDScanningAlertType: Int, Sendable, AlertTypeProtocol {
             return "mb_recognition_timeout_dialog_message".localizedString
         case .disallowedClass:
             return "mb_document_class_filtered_dialog_message".localizedString
+        case .unsupportedDocument:
+            return "mb_unsupported_document_message".localizedString
+        case .inactivityTimeout:
+            return "mb_recognition_timeout_dialog_message".localizedString
+        case .unsupportedBarcodeTimeout:
+            return "mb_recognition_timeout_dialog_message".localizedString
         }
     }
     
     public var buttonTitle: String {
         switch self {
-        case .timeout, .disallowedClass:
+        case .timeout, .disallowedClass, .unsupportedDocument, .inactivityTimeout, .unsupportedBarcodeTimeout:
             return "mb_recognition_timeout_dialog_retry_button".localizedString
         }
     }
@@ -49,6 +66,12 @@ public enum BlinkIDScanningAlertType: Int, Sendable, AlertTypeProtocol {
             return .steptimeout
         case .disallowedClass:
             return .documentclassnotallowed
+        case .unsupportedDocument:
+            return .documentnotsupported
+        case .inactivityTimeout:
+            return .inactivitytimeout
+        case .unsupportedBarcodeTimeout:
+            return .unsupportedbarcodetimeout
         }
     }
 }

@@ -15,9 +15,12 @@ public enum BlinkIDVerifyScanningAlertType: Int, Sendable, AlertTypeProtocol {
     /// Scanned document currently not supported by the recognizer
     case unsupportedDocument
     
+    /// Nothing on screen changed for the session's `inactivityTimeoutDuration`.
+    case inactivityTimeout
+    
     public var title: String {
         switch self {
-        case .timeout:
+        case .timeout, .inactivityTimeout:
             return "mb_recognition_timeout_dialog_title".localizedString
         case .unsupportedDocument:
             return "mb_unsupported_document_title".localizedString
@@ -26,7 +29,7 @@ public enum BlinkIDVerifyScanningAlertType: Int, Sendable, AlertTypeProtocol {
     
     public var description: String {
         switch self {
-        case .timeout:
+        case .timeout, .inactivityTimeout:
             return "mb_recognition_timeout_dialog_message".localizedString
         case .unsupportedDocument:
             return "mb_unsupported_document_message".localizedString
@@ -35,7 +38,7 @@ public enum BlinkIDVerifyScanningAlertType: Int, Sendable, AlertTypeProtocol {
     
     public var buttonTitle: String {
         switch self {
-        case .timeout, .unsupportedDocument:
+        case .timeout, .unsupportedDocument, .inactivityTimeout:
             return "mb_recognition_timeout_dialog_retry_button".localizedString
         }
     }
@@ -46,6 +49,8 @@ public enum BlinkIDVerifyScanningAlertType: Int, Sendable, AlertTypeProtocol {
             return .steptimeout
         case .unsupportedDocument:
             return .documentnotsupported
+        case .inactivityTimeout:
+            return .inactivitytimeout
         }
     }
 }

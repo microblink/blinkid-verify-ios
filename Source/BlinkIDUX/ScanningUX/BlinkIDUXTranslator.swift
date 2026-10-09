@@ -5,9 +5,9 @@
 //  Created by Jura Skrlec on 19.02.2025..
 //
 
-#if canImport(BlinkIDVerify)
+#if BLINKIDVERIFYUX
 import BlinkIDVerify
-#elseif canImport(BlinkID)
+#elseif BLINKIDUX
 import BlinkID
 #endif
 
@@ -22,14 +22,14 @@ final class BlinkIDUXTranslator {
     private var reticleLocked: Bool = false
     private var barcodeTimerTask: Task<Void, Never>?
     
-    func translate(frameProcessResult: FrameProcessResult, scanningSettings: ScanningSettings) -> [UIEvent] {
+    @ProcessingActor
+    func translate(frameProcessResult: FrameProcessResult, session: BlinkIDSession) -> [UIEvent] {
         var events: [UIEvent] = []
         
-        if frameProcessResult.processResult?.resultCompleteness.scanningStatus == .sideScanned && (!backSideDispatched && !passportDispatched) {
-            
-            if let inputImageAnalysisResult = frameProcessResult.processResult?.inputImageAnalysisResult, inputImageAnalysisResult.documentClassInfo.documentType == .passport {
+        if session.getScanningStatus() == .sideScanned && (!backSideDispatched && !passportDispatched) {
+            if let inputImageAnalysisResult = frameProcessResult.processResult?.inputImageAnalysisResult, inputImageAnalysisResult.documentClassInfo.documentType?.documentTypeId == .passport {
                 passportDispatched = true
-                if [Country.usa, Country.india].contains(inputImageAnalysisResult.documentClassInfo.country) {
+                if [CountryID.usa, CountryID.india].contains(inputImageAnalysisResult.documentClassInfo.country?.countryId) {
                     events.append(.requestDocumentSide(side: .passportBarcode))
                 } else {
                     events.append(.requestDocumentSide(side: .passport(inputImageAnalysisResult.documentRotation.passportOrientation)))
@@ -42,15 +42,24 @@ final class BlinkIDUXTranslator {
             }
         }
         
-        if frameProcessResult.processResult?.inputImageAnalysisResult.processingStatus == .barcodeRecognitionFailed && !barcodeDispatched && backSideDispatched {
+        if frameProcessResult.processResult?.inputImageAnalysisResult.processingStatus == .barcodeRecognitionFailed && !barcodeDispatched {
+            
             reticleLocked = true
-            if barcodeTimerTask == nil {
-                startBarcodeScanTimer()
+            barcodeDispatched = true
+            
+            events.append(.requestDocumentSide(side: .barcode))
+            
+            if frameProcessResult.processResult?.resultCompleteness.barcode?.parsingSupported == false && canResolveBarcode(session: session) {
+                if barcodeTimerTask == nil {
+                    startBarcodeScanTimer()
+                    
+                }
             }
-            if barcodeStepNeeded {
-                barcodeDispatched = true
-                events.append(.requestDocumentSide(side: .barcode))
-            }
+        }
+        
+        if barcodeStepNeeded {
+            barcodeStepNeeded = false
+            events.append(.unparsableBarcode)
         }
         
         guard !reticleLocked else {
@@ -58,9 +67,11 @@ final class BlinkIDUXTranslator {
         }
         
         switch frameProcessResult.processResult?.inputImageAnalysisResult.processingStatus {
+        case .unsupportedDocument:
+            events.append(.unsupportedDocument)
         case .scanningWrongSide, .awaitingOtherSide:
             if passportDispatched, let inputImageAnalysisResult = frameProcessResult.processResult?.inputImageAnalysisResult {
-                if [Country.usa, Country.india].contains(inputImageAnalysisResult.documentClassInfo.country) {
+                if [CountryID.usa, CountryID.india].contains(inputImageAnalysisResult.documentClassInfo.country?.countryId) {
                     events.append(.wrongSidePassportWithBarcode)
                 } else {
                     events.append(.wrongSidePassport(passportOrientation: inputImageAnalysisResult.documentRotation.passportOrientation))
@@ -78,6 +89,8 @@ final class BlinkIDUXTranslator {
             }
         case .mandatoryFieldMissing, .invalidCharactersFound, .mrzParsingFailed:
             events.append(.notFullyVisible)
+        case .barcodeDetectionFailed:
+            events.append(.undetectedBarcode)
         default:
             break
         }
@@ -97,19 +110,19 @@ final class BlinkIDUXTranslator {
             break
         }
         
-        if frameProcessResult.processResult?.inputImageAnalysisResult.blurDetectionStatus == .detected && scanningSettings.skipImagesWithBlur {
+        if frameProcessResult.processResult?.inputImageAnalysisResult.blurDetectionStatus == .detected && session.getResolvedSessionSettings().scanningSettings.documentCaptureModule?.imageWithBlurRejected == true {
             events.append(.blur)
         }
-        if frameProcessResult.processResult?.inputImageAnalysisResult.glareDetectionStatus == .detected && scanningSettings.skipImagesWithGlare {
+        if frameProcessResult.processResult?.inputImageAnalysisResult.glareDetectionStatus == .detected && session.getResolvedSessionSettings().scanningSettings.documentCaptureModule?.imageWithGlareRejected == true {
             events.append(.glare)
         }
-        if frameProcessResult.processResult?.inputImageAnalysisResult.documentHandOcclusionStatus == .detected && scanningSettings.skipImagesOccludedByHand {
+        if frameProcessResult.processResult?.inputImageAnalysisResult.documentHandOcclusionStatus == .detected && session.getResolvedSessionSettings().scanningSettings.documentCaptureModule?.imageWithHandOcclusionRejected == true {
             events.append(.occlusion)
         }
-        if frameProcessResult.processResult?.inputImageAnalysisResult.documentLightingStatus == .tooDark && scanningSettings.skipImagesWithInadequateLightingConditions {
+        if frameProcessResult.processResult?.inputImageAnalysisResult.documentLightingStatus == .tooDark && session.getResolvedSessionSettings().scanningSettings.documentCaptureModule?.imageWithPoorLightingRejected == true {
             events.append(.tooDark)
         }
-        if frameProcessResult.processResult?.inputImageAnalysisResult.documentLightingStatus == .tooBright && scanningSettings.skipImagesWithInadequateLightingConditions {
+        if frameProcessResult.processResult?.inputImageAnalysisResult.documentLightingStatus == .tooBright && session.getResolvedSessionSettings().scanningSettings.documentCaptureModule?.imageWithPoorLightingRejected == true {
             events.append(.tooBright)
         }
         
@@ -133,6 +146,24 @@ final class BlinkIDUXTranslator {
                 self?.barcodeStepNeeded = true
             }
         }
+    }
+    
+    @ProcessingActor
+    private func canResolveBarcode(session: BlinkIDSession) -> Bool {
+        let settings = session.getResolvedSessionSettings().scanningSettings
+        
+        if settings.barcodeModule?.presenceMandatory == true {
+            return false
+        }
+        
+        if settings.documentCaptureModule == nil,
+           settings.vizModule == nil,
+           settings.mrzModule == nil,
+           settings.barcodeModule != nil {
+            return false
+        }
+        
+        return true
     }
 }
 

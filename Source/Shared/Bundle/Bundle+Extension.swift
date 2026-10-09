@@ -15,7 +15,7 @@ extension Bundle {
         return Bundle(for: Camera.self)
 #endif
     }
-    
+
     /// Host-app provided bundle containing translations that override the SDK's
     /// built-in strings. When set, localized lookups first search this bundle and
     /// fall back to `frameworkBundle` for any key that isn't found here.
@@ -59,7 +59,7 @@ extension Bundle {
         guard let language = languageOverride else { return nil }
         return Locale.Language(identifier: language).characterDirection
     }
-    
+
     func localizedString(forKey key: String) -> String {
         self.localizedString(forKey: key, value: nil, table: nil)
     }
@@ -69,7 +69,7 @@ extension String {
     var localizedString: String {
         // Sentinel used to detect a missing key so we can fall back to the SDK bundle.
         let notFound = "\u{0}"
-        
+
         if let customBundle = Bundle.customLocalizationBundle {
             let value = Bundle.localizationBundle(for: customBundle).localizedString(
                 forKey: self,
@@ -80,8 +80,7 @@ extension String {
                 return value
             }
         }
-        
+
         return Bundle.localizationBundle(for: .frameworkBundle).localizedString(forKey: self)
     }
 }
-

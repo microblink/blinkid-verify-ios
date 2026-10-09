@@ -13,11 +13,11 @@ import UIKit
 import os.log
 @preconcurrency import AVFoundation
 
-#if canImport(BlinkIDVerify)
+#if BLINKIDVERIFYUX
 import BlinkIDVerify
-#elseif canImport(BlinkID)
+#elseif BLINKIDUX
 import BlinkID
-#elseif canImport(BlinkCard)
+#elseif BLINKCARDUX
 import BlinkCard
 #endif
 
@@ -78,6 +78,9 @@ public actor CaptureService {
     private var runtimeErrorNotificationTask: Task<Void, Never>?
     
     init() {
+        if #available(iOS 26.0, *) {
+            captureSession.automaticallyRunsDeferredStart = true
+        }
         // Create a source object to connect the preview view with the capture session.
         previewSource = DefaultPreviewSource(session: captureSession)
     }
@@ -136,7 +139,7 @@ public actor CaptureService {
             activeVideoInput = try addInput(for: defaultCamera)
 
             // Configure the session for video capture by default.
-            captureSession.sessionPreset = .hd1920x1080
+            captureSession.sessionPreset = .high
             try addOutput(videoCapture.output)
             
             // Monitor the system-preferred camera state.
@@ -341,6 +344,9 @@ public actor CaptureService {
     /// Sets whether the SDK enables torch.
     func setTorchEnabled(_ isEnabled: Bool) {
         // Bracket the following configuration in a begin/commit configuration pair.
+        
+        guard captureSession.isRunning else { return }
+        
         captureSession.beginConfiguration()
         defer { captureSession.commitConfiguration() }
         do {

@@ -51,8 +51,7 @@ public final class BlinkIDVerifyTheme: UXThemeProtocol {
     
     // Toast
     public var toastBackgroundColor: Color = .mbToastBackground
-    
-    
+
     // MARK: - Custom localization
 
     /// A bundle from the host app containing translations that override the SDK's

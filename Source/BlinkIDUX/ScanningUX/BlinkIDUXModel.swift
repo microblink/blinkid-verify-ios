@@ -11,9 +11,9 @@ import CoreImage
 import Combine
 import SwiftUI
 
-#if canImport(BlinkIDVerify)
+#if BLINKIDVERIFYUX
 import BlinkIDVerify
-#elseif canImport(BlinkID)
+#elseif BLINKIDUX
 import BlinkID
 #endif
 
@@ -24,14 +24,33 @@ public final class BlinkIDUXModel: ScanningViewModel<BlinkIDScanningResult, UIEv
 
     /// The result of the document verification capture process.
     /// Contains the captured document images and associated data.
-    @Published public var result: BlinkIDResultState?
+    var onScanCompleted: ((BlinkIDResultState) -> Void)?
 
     @Published var passportState = PassportAnimationState()
 
     private var cancellables = Set<AnyCancellable>()
-
-    public init(analyzer: any CameraFrameAnalyzer<CameraFrame, UIEvent>, uxSettings: ScanningUXSettings = ScanningUXSettings()) {
-        super.init(analyzer: analyzer, uxSettings: uxSettings, reticleStateMachine: ReticleStateMachine(), firstSideFinishedText: "mb_accessibility_success_first_side_scanned".localizedString, scanFinishedText: "mb_accessibility_success_document_scanned".localizedString)
+    var advanceToNextStep: (@Sendable () async -> Void)?
+    
+    var extractionMode: BlinkIDExtractionMode?
+    
+    public init(analyzer: any CameraFrameAnalyzer<CameraFrame, UIEvent>,
+                uxSettings: ScanningUXSettings = ScanningUXSettings(),
+                onScanCompleted: @escaping (BlinkIDResultState) -> Void,
+                onFrameProcessResult: (@Sendable (FrameProcessResultHandle) async -> Void)? = nil) {
+        self.onScanCompleted = onScanCompleted
+        
+        if let analyzer = analyzer as? BlinkIDAnalyzer {
+            self.extractionMode = analyzer.extractionMode
+        }
+        
+        super.init(analyzer: analyzer, uxSettings: uxSettings, reticleStateMachine: ReticleStateMachine(extractionMode: self.extractionMode), firstSideFinishedText: "mb_accessibility_success_first_side_scanned".localizedString, scanFinishedText: "mb_accessibility_success_document_scanned".localizedString)
+        
+        if let callback = onFrameProcessResult {
+            let wrappedCallback = makeInternalCallback(forwarding: callback)
+            Task {
+                await (analyzer as? BlinkIDAnalyzer)?.setFrameProcessResultCallback(wrappedCallback)
+            }
+        }
 
         startEventHandling()
         camera.$status
@@ -49,13 +68,13 @@ public final class BlinkIDUXModel: ScanningViewModel<BlinkIDScanningResult, UIEv
             switch scanningResult {
             case .completed(let scanningResult):
                 await finishScan()
-                self.result = BlinkIDResultState(scanningResult: scanningResult)
+                onScanCompleted?(BlinkIDResultState(scanningResult: scanningResult))
             case .interrupted(let alertType):
                 self.alertType = alertType
             case .cancelled:
                 showLicenseErrorAlert = true
             case .ended:
-                self.result = BlinkIDResultState(scanningResult: nil)
+                onScanCompleted?(BlinkIDResultState(scanningResult: nil))
             }
         }
     }
@@ -72,23 +91,18 @@ public final class BlinkIDUXModel: ScanningViewModel<BlinkIDScanningResult, UIEv
             for await events in await analyzer.events.stream {
                 if events.contains(.requestDocumentSide(side: .back)) {
                     firstSideScanned(frontFlipImage: Image.frontIdImage, backFlipImage: Image.backIdImage, flipState: .flip, nextState: .back)
-                    cancelTooltipTimer()
                 }
                 else if events.contains(.requestDocumentSide(side: .passport(.none))) {
                     passportSideScanned(.none)
-                    cancelTooltipTimer()
                 }
                 else if events.contains(.requestDocumentSide(side: .passport(.right90))) {
                     passportSideScanned(.right90)
-                    cancelTooltipTimer()
                 }
                 else if events.contains(.requestDocumentSide(side: .passport(.left90))) {
                     passportSideScanned(.left90)
-                    cancelTooltipTimer()
                 }
                 else if events.contains(.requestDocumentSide(side: .passportBarcode)) {
                     passportWithBarcodeSideScanned()
-                    cancelTooltipTimer()
                 }
                 else if events.contains(.requestDocumentSide(side: .barcode)) {
                     self.setReticleState(.barcode, force: true)
@@ -109,6 +123,10 @@ public final class BlinkIDUXModel: ScanningViewModel<BlinkIDScanningResult, UIEv
                 }
                 else if events.contains(.wrongSidePassport(passportOrientation: .right90)) {
                     self.setReticleState(.error("mb_scanning_wrong_page_right"))
+                    currentErrorMessage = .flipside
+                }
+                else if events.contains(.undetectedBarcode) {
+                    self.setReticleState(.error("mb_barcode_instructions"))
                     currentErrorMessage = .flipside
                 }
                 else if events.contains(.tooClose) {
@@ -150,4 +168,16 @@ public final class BlinkIDUXModel: ScanningViewModel<BlinkIDScanningResult, UIEv
             }
         }
     }
+    
+    // - MARK: Callback
+    
+    private func makeInternalCallback(forwarding clientCallback: (@Sendable (FrameProcessResultHandle) async -> Void)?) -> @Sendable (FrameProcessResultHandle) async -> Void {
+        return { [weak self] handle in
+            await MainActor.run { [weak self] in
+                self?.advanceToNextStep = handle.advanceToNextStep
+            }
+            await clientCallback?(handle)
+        }
+    }
+
 }

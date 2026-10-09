@@ -5,7 +5,7 @@
 //  Copyright (c) 2025 Microblink (http://microblink.com/)
 //
 //  License Notice
-//  This License Notice ("License") sets forth the terms and conditions governing the use, modification,  and support of the UX code in this library, type: .dynamic,  inclusive of UI code and any helper functions (“UX  code”), incorporated within Microblink Products.
+//  This License Notice ("License") sets forth the terms and conditions governing the use, modification,  and support of the UX code in this library, inclusive of UI code and any helper functions (“UX  code”), incorporated within Microblink Products.
 //  By accessing, using or modifying the UX code in any manner, Licensee represents and warrants to have  the right, authority and capacity to abide by the License and confirms to have read and understood  License.
 //
 //  All components of Microblink Products other than the UX code addressed herein, shall remain governed  by the License terms set forth in the applicable general terms and conditions for using  Microblink technology. For any matter not specifically addressed in this License, the terms and  conditions set forth in the general terms and conditions for using Microblink technology shall  apply.
@@ -38,15 +38,19 @@ import PackageDescription
 let package = Package(name: "BlinkIDVerifyUX",
                       platforms: [.iOS(.v16)],
                       products: [
-                          .library(name: "BlinkIDVerifyUX", type: .dynamic,   targets: ["BlinkIDVerifyUX"])
+                          .library(name: "BlinkIDVerifyUX", type: .dynamic, targets: ["BlinkIDVerifyUX"])
                       ],
                       targets: [.target(name: "BlinkIDVerifyUX",
                                         dependencies: ["BlinkIDVerify"],
                                         path: "Source",
                                         resources: [
                                             .process("PrivacyInfo.xcprivacy"),
-                                            .process("BlinkIDVerifyUX/Localizable.xcstrings")],
-                                        swiftSettings: [.enableUpcomingFeature("ExistentialAny")]),
+                                            .process("BlinkIDVerifyUX/Localizable.xcstrings"),
+                                            .process("Shared/Sounds")],
+                                        swiftSettings: [
+                                            .enableUpcomingFeature("ExistentialAny"),
+                                            .define("BLINKIDVERIFYUX")
+                                        ]),
                                  .binaryTarget(
                                     name: "BlinkIDVerify",
                                     path: "Frameworks/BlinkIDVerify.xcframework"
