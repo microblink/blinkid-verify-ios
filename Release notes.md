@@ -1,5 +1,15 @@
 # Release notes
 
+## 4000.0.1
+
+### Bug fixes
+- Xcode 16 and Xcode 26.0–26.2 compatibility: Fixed `expected '_expose' option such as 'Cxx'` build errors in the `BlinkIDVerify` Swift interface.
+- Xcode 16 compatibility: Fixed `BlinkIDVerifyUX` build errors with Xcode 16 (Swift 6.1) caused by camera APIs available only in the iOS 26 SDK. When building with Xcode 26 or later, deferred camera start is enabled as before.
+- SDK version: The SDK now reports its version correctly. v4000.0.0 reported version 3.21.0.
+
+### Requirements
+- Minimum supported toolchain is now Swift 6.1 / Xcode 16.3. The previously listed Swift 5.10 / Xcode 15.3 could not resolve the Swift package, which requires `swift-tools-version: 6.0`.
+
 ## 4000.0.0
 
 ### What's new
@@ -92,15 +102,6 @@ More information on Consent Management can be found here: https://docs.microblin
 - Consent screen accessibility: VoiceOver labels and heading, Dynamic Type with scrolling, localized privacy notice title and back button
 - HTTP 401 responses, for example for an `Authorization` header without its `Basic ` prefix, now return `RequestError.unauthorized` instead of `.unknown`
 - Added `FieldType` cases `vehicleNumber`, `passportNumber`, `trafficParticipantNumber`, `ethnicity` and `parentFullName`
-
-## 3.21.1
-
-- Added support for setting a custom localization bundle and switching the in-app language at runtime
-
-## 3.21.0
-
-### What's New
-- Update to BlinkID v7.8 for document capturing and extraction
 
 ## 3.20.0
 
