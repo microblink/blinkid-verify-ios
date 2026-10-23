@@ -4,7 +4,7 @@ SPDXID: SPDXRef-DOCUMENT
 DocumentName: //BlinkIDVerify:BlinkIDVerify
 Creator: Person: pero
 Creator: Tool: https//github.com/bazelbuild/rules_license/tools:write_sbom
-Created: 2026-10-12-17:53:17Z
+Created: 2026-10-23-11:38:06Z
 
 ##### Package: //BlinkIDVerify:BlinkIDVerify
 SPDXID: "@@core-identity+//3rdparty/config_ex/ConfigEx"

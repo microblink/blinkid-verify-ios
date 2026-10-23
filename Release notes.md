@@ -1,5 +1,8 @@
 # Release notes
 
+## 4000.0.3
+- Bugfixes and improvements
+
 ## 4000.0.2
 ### Bug fixes
 - add missing BlinkID specific translations
