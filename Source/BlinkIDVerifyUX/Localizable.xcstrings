@@ -1027,348 +1027,6 @@
         }
       }
     },
-    "mb_back_instructions_barcode": {
-      "comment": "scan.instructions.scan_barcode: ",
-      "extractionState": "manual",
-      "localizations": {
-        "ak": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skane barkoodu no"
-          }
-        },
-        "am": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ባርኮዱን ይቃኙ"
-          }
-        },
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "امسح الرمز الشريطي"
-          }
-        },
-        "bn": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "বারকোড স্ক্যান করুন"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Naskenujte čárový kód"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Scan stregkoden"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Scannen Sie den Barcode"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Σαρώστε τον γραμμωτό κώδικα"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Scan the barcode"
-          }
-        },
-        "en-GB": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Scan the barcode"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Escanea el código de barras"
-          }
-        },
-        "es-MX": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Escanear el código de barras"
-          }
-        },
-        "fa": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Barkod ra eskan konid"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skannaa viivakoodi"
-          }
-        },
-        "fil": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "I-scan ang barcode"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Scanner le code-barres d'un document"
-          }
-        },
-        "fr-CA": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Scannez le code-barres."
-          }
-        },
-        "ha": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "A ɗauki hoton lambar barcode"
-          }
-        },
-        "he": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "לסרוק את הברקוד"
-          }
-        },
-        "hi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "बारकोड को स्कैन करें"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skenirajte barkod"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Szkennelje be a vonalkódot"
-          }
-        },
-        "id": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pindai kode batang"
-          }
-        },
-        "is": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skannið strikamerkið"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Scansiona il codice a barre"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "バーコードをスキャンしてください"
-          }
-        },
-        "ka-GE": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "დაასკანერეთ ბარკოდი"
-          }
-        },
-        "kk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Штрих-кодты сканерлеңіз"
-          }
-        },
-        "km-KH": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ស្កេនបាកូដ"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "바코드를 스캔하세요"
-          }
-        },
-        "lv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skenēt svītrkodu"
-          }
-        },
-        "ms": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Imbas kod bar"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skann strekkoden"
-          }
-        },
-        "ne": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "बारकोड स्क्यान गर्नुहोस्"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Scan de barcode"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zeskanuj kod kreskowy"
-          }
-        },
-        "ps-AF": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "بارکوډ سکین کړئ"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Digitalizar o código de barras"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Digitalize o código de barras"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Scanare cod de bare"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Отсканируйте штрихкод"
-          }
-        },
-        "si": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "බාර්කෝඩ් එක ස්කෑන් කරන්න"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Naskenovať čiarový kód"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Optično preberite črtno kodo"
-          }
-        },
-        "sr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skenirajte bar-kod"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skanna streckkoden"
-          }
-        },
-        "sw": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Skani msimbopau"
-          }
-        },
-        "th": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "สแกนบาร์โค้ด"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Barkodu tara"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Відскануйте штрих-код"
-          }
-        },
-        "ur": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "بار کوڈ اسکین کریں"
-          }
-        },
-        "uz": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Shtrix-kodni skanerlash"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quét mã vạch"
-          }
-        },
-        "yo": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ṣe àyẹ̀wò kóódù onílà"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "扫描条形码"
-          }
-        },
-        "zh-Hant": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "掃描條碼"
-          }
-        }
-      }
-    },
     "mb_barcode_id_instructions": {
       "comment": "scan.instructions.scan_barcode_side: ",
       "extractionState": "manual",
@@ -19495,6 +19153,348 @@
         }
       }
     },
+    "mb_loading": {
+      "comment": "global.loading: ",
+      "extractionState": "manual",
+      "localizations": {
+        "ak": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ɛloade…"
+          }
+        },
+        "am": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "በመጫን ላይ…"
+          }
+        },
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تحميل…"
+          }
+        },
+        "bn": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "লোড হচ্ছে…"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Načítání…"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Indlæser…"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wird geladen…"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Φόρτωση…"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading…"
+          }
+        },
+        "en-GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading…"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cargando…"
+          }
+        },
+        "es-MX": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cargando…"
+          }
+        },
+        "fa": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dar hâl-e bârgiri…"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ladataan…"
+          }
+        },
+        "fil": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naglo-load…"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chargement…"
+          }
+        },
+        "fr-CA": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chargement…"
+          }
+        },
+        "ha": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lodawa…"
+          }
+        },
+        "he": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "טְעִינָה…"
+          }
+        },
+        "hi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "लोडिंग…"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Učitavanje…"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Betöltés…"
+          }
+        },
+        "id": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memuat…"
+          }
+        },
+        "is": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hleður…"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Caricamento…"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "読み込み中…"
+          }
+        },
+        "ka-GE": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "იტვირთება…"
+          }
+        },
+        "kk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Жүктелуде…"
+          }
+        },
+        "km-KH": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "កំពុងផ្ទុក…"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "불러오는 중…"
+          }
+        },
+        "lv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Notiek ielāde…"
+          }
+        },
+        "ms": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Memuatkan…"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laster …"
+          }
+        },
+        "ne": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "लोड हुँदैछ…"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laden…"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ładowanie…"
+          }
+        },
+        "ps-AF": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "بارول…"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Carregando…"
+          }
+        },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Carregando…"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Încărcare…"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Идет загрузка…"
+          }
+        },
+        "si": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "පූරණය වෙමින්…"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Načítava sa…"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nalaganje…"
+          }
+        },
+        "sr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Učitavanje…"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Läser in …"
+          }
+        },
+        "sw": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inapakia…"
+          }
+        },
+        "th": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "กำลังโหลด…"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yükleniyor…"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Завантаження…"
+          }
+        },
+        "ur": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "لوڈ ہو رہا ہے…"
+          }
+        },
+        "uz": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Yuklanmoqda…"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Đang tải…"
+          }
+        },
+        "yo": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ó ń kó ra jọ pọ̀…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加载中…"
+          }
+        },
+        "zh-Hant": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "載入中…"
+          }
+        }
+      }
+    },
     "mb_move_closer": {
       "comment": "scan.error.too_far: ",
       "extractionState": "manual",
@@ -19898,7 +19898,7 @@
         "en-GB": {
           "stringUnit": {
             "state": "translated",
-            "value": "Move farther away"
+            "value": "Move farther"
           }
         },
         "es": {
@@ -24686,7 +24686,7 @@
         "en-GB": {
           "stringUnit": {
             "state": "translated",
-            "value": "Open your passport to the page with your photo and personal details. This page shows your name, date of birth, passport number and other identifying information."
+            "value": "Open your passport to the page with your photo and personal details. This page shows your name, date of birth, passport number, and other identifying information."
           }
         },
         "es": {
@@ -26678,343 +26678,343 @@
       }
     },
     "mb_recognition_timeout_dialog_message": {
-      "comment": "scan.error.unsuccessful.message.document_old: ",
+      "comment": "scan.error.unsuccessful.message.document: ",
       "extractionState": "manual",
       "localizations": {
         "ak": {
           "stringUnit": {
             "state": "translated",
-            "value": "Wontumi nkan krataa no. Yɛsrɛw san yɛ bio."
+            "value": "Hwɛ hu sɛ nkekae biara nni krataa no so, wotumi hu no yiye, na asum biara nni so."
           }
         },
         "am": {
           "stringUnit": {
             "state": "translated",
-            "value": "ሰነዱን ማንበብ አልተቻለም እባክዎ እንደገና ይሞክሩ።"
+            "value": "የሰነዱ ቦታ በቂ ብርሃን እንደሚያገኝ፣ በደንብ እንደሚታይና ነጸብራቅ እንደሌለበት ያረጋግጡ።"
           }
         },
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "غير قادر على قراءة المستند. يُرجى المحاولة مرة أخرى."
+            "value": "تأكد من أن المستند مضاء جيدًا ومرئي بالكامل وخالٍ من الانعكاسات الضوئية."
           }
         },
         "bn": {
           "stringUnit": {
             "state": "translated",
-            "value": "ডকুমেন্টটি পড়া যাচ্ছে না। অনুগ্রহ করে পুনরায় চেষ্টা করুন।"
+            "value": "নিশ্চিত করুন যে নথিতে পর্যাপ্ত আলো রয়েছে, এটি সম্পূর্ণ দৃশ্যমান এবং এতে কোনো চকচকে ভাব নেই।"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dokument se nepodařilo přečíst. Zkuste to znovu."
+            "value": "Ujistěte se, že je dokument dobře osvětlený, zcela viditelný a bez odlesků."
           }
         },
         "da": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kunne ikke læse dokumentet. Prøv igen."
+            "value": "Sørg for, at dokumentet er godt belyst og fuldt ud synligt, samt at der ikke er noget genskin."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Das Dokument kann nicht gelesen werden. Bitte versuchen Sie es erneut."
+            "value": "Achten Sie darauf, dass das Dokument gut belichtet und vollständig sichtbar ist und nicht blendet."
           }
         },
         "el": {
           "stringUnit": {
             "state": "translated",
-            "value": "Δεν είναι δυνατή η ανάγνωση του εγγράφου. Δοκιμάστε ξανά."
+            "value": "Βεβαιωθείτε ότι το έγγραφο είναι καλά φωτισμένο, πλήρως ορατό και δεν έχει αντανακλάσεις."
           }
         },
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Unable to read the document. Please try again."
+            "value": "Make sure the document is well lit, fully visible, and free of glare."
           }
         },
         "en-GB": {
           "stringUnit": {
             "state": "translated",
-            "value": "Unable to read the document. Please try again."
+            "value": "Make sure the document is well lit, fully visible, and free of glare."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "No se puede leer el documento. Por favor, inténtelo de nuevo."
+            "value": "Asegúrate de que el documento esté bien iluminado, se vea completamente y no haya reflejos."
           }
         },
         "es-MX": {
           "stringUnit": {
             "state": "translated",
-            "value": "No se puede leer el documento. Inténtalo de nuevo."
+            "value": "Asegúrese de que el documento esté bien iluminado, completamente visible y libre de reflejos."
           }
         },
         "fa": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sanad khande nashod. Lotfan dobare talash konid."
+            "value": "Motmaen shavid sanad khub roshan, kamelan namayan va bedun-e tabesh ast."
           }
         },
         "fi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Asiakirjan lukeminen ei onnistu. Yritä uudelleen."
+            "value": "Varmista, että asiakirja on hyvin valaistu, se näkyy kokonaisuudessaan eikä siinä ole heijastuksia."
           }
         },
         "fil": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hindi mabasa ang dokumento. Pakisubukan ulit."
+            "value": "Siguraduhing sapat na naiilawan ang dokumento, ganap na nakikita, at walang glare."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Impossible de lire le document. Veuillez réessayer."
+            "value": "Assurez-vous que le document est bien éclairé, entièrement visible et sans reflet."
           }
         },
         "fr-CA": {
           "stringUnit": {
             "state": "translated",
-            "value": "Impossible de lire le document. Veuillez réessayer."
+            "value": "Vérifiez que le document est bien éclairé, entièrement visible et exempt de reflets."
           }
         },
         "ha": {
           "stringUnit": {
             "state": "translated",
-            "value": "An kasa karanta takardar. A sake gwadawa."
+            "value": "Tabbatar cewa an haska takardar da kyau, ana gani cikakke, kuma ba wani dishi-dishi."
           }
         },
         "he": {
           "stringUnit": {
             "state": "translated",
-            "value": "לא ניתן לקרוא את המסמך. נא לנסות שוב."
+            "value": "ודא שהמסמך מואר היטב, גלוי לחלוטין ולא מוסתר כלל ע\"י בוהק."
           }
         },
         "hi": {
           "stringUnit": {
             "state": "translated",
-            "value": "दस्तावेज़ पढ़ा नहीं जा सका. कृपया दोबारा प्रयास करें."
+            "value": "सुनिश्चित करें कि दस्तावेज़ पर अच्छी रोशनी हो, वह पूरा दिख रहा हो और किसी भी तरह की चमक से मुक्त हो।"
           }
         },
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dokument nije moguće očitati. Molimo pokušajte ponovo."
+            "value": "Pripazite da je dokument dobro osvijetljen, u potpunosti vidljiv i bez odsjaja."
           }
         },
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nem sikerült elolvasni a dokumentumot. Kérjük, próbálja újra."
+            "value": "Ügyeljen rá, hogy az okmány jól meg legyen világítva, teljesen látható legyen és ne legyen rajta becsillanás."
           }
         },
         "id": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tak dapat membaca dokumen. Silakan coba lagi."
+            "value": "Pastikan dokumen cukup terang, terlihat sepenuhnya, dan bebas dari silau cahaya."
           }
         },
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ekki tókst að lesa skjalið. Reynið aftur."
+            "value": "Gakktu úr skugga um að skjalið sé vel upplýst, fulllega sýnilegt og laust við endurskin."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Impossibile leggere il documento. Riprova."
+            "value": "Assicurati che il documento sia ben illuminato, interamente visibile e senza riflessi."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "書類を読み取れません。もう一度お試しください。"
+            "value": "書類全体が十分に明るく写り、すべてが画面内に収まり、反射がないことを確認してください。"
           }
         },
         "ka-GE": {
           "stringUnit": {
             "state": "translated",
-            "value": "დოკუმენტის წაკითხვა ვერ ხერხდება. ხელახლა სცადეთ."
+            "value": "დარწმუნდით, რომ დოკუმენტი კარგად არის განათებული, სრულად ჩანს კადრში და არ აქვს ანარეკლი."
           }
         },
         "kk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Құжатты оқу мүмкін болмады. Әрекетті қайталаңыз."
+            "value": "Құжатты жарық жерге, толықтай көрінетінін және жарық шағылыспайтын жерге қойыңыз."
           }
         },
         "km-KH": {
           "stringUnit": {
             "state": "translated",
-            "value": "មិនអាចអានឯកសារបានទេ។ សូមព្យាយាមម្តងទៀត។"
+            "value": "ត្រូវប្រាកដថា ឯកសារភ្លឺច្បាស់ មើលឃើញពេញ និងគ្មានចំណាំងពន្លឺ។"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "문서를 읽을 수 없습니다. 다시 시도하세요."
+            "value": "문서에 빛이 충분하고, 전체가 보이며, 빛이 반사되지 않는지 확인하세요."
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nevar nolasīt dokumentu. Lūdzu, mēģiniet vēlreiz."
+            "value": "Pārliecinieties, ka dokuments ir labi apgaismots, pilnībā redzams un to neietekmē atspīdums."
           }
         },
         "ms": {
           "stringUnit": {
             "state": "translated",
-            "value": "Tidak dapat membaca dokumen. Sila cuba semula."
+            "value": "Pastikan dokumen mempunyai pencahayaan yang mencukupi, kelihatan sepenuhnya dan bebas daripada silau."
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kunne ikke lese dokumentet. Prøv igjen."
+            "value": "Sørg for at dokumentet er godt opplyst, helt synlig og uten gjenskinn."
           }
         },
         "ne": {
           "stringUnit": {
             "state": "translated",
-            "value": "कागजात पढ्न सकेन। कृपया पुन: प्रेस गर्नुहोस्।"
+            "value": "कागजात पर्याप्त उज्यालोमा रहेको, पूर्ण रूपमा देखिएको र नचम्किएको हुनुपर्छ।"
           }
         },
         "nl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Kon het document niet lezen. Probeer het alstublieft opnieuw."
+            "value": "Zorg ervoor dat het document goed verlicht en volledig zichtbaar is en of er geen schitteringen op te zien zijn."
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nie można odczytać dokumentu. Spróbuj ponownie."
+            "value": "Upewnij się, że dokument jest dobrze oświetlony, w pełni widoczny i bez odblasków."
           }
         },
         "ps-AF": {
           "stringUnit": {
             "state": "translated",
-            "value": "د سند لوستلو توان نه لرم. مهرباني وکړئ بیا هڅه وکړئ."
+            "value": "ډاډ حاصل کړئ چې سند ښه روښانه، په بشپړ ډول د لیدو وړ دی او هېڅ د رڼا وړانګې پرې نشته."
           }
         },
         "pt": {
           "stringUnit": {
             "state": "translated",
-            "value": "Não foi possível ler o documento. Tente novamente."
+            "value": "Garanta que o documento esteja bem iluminado, totalmente visível e sem reflexos."
           }
         },
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Não foi possível ler o documento. Tente novamente."
+            "value": "Certifique-se de que o documento esteja bem iluminado, totalmente visível e sem reflexos."
           }
         },
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "Documentul nu poate fi citit. Încercați din nou."
+            "value": "Asigurați-vă că documentul este bine iluminat, vizibil în întregime și fără nicio reflexie."
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Не удалось прочитать документ. Повторите попытку."
+            "value": "Убедитесь, что документ хорошо освещен, полностью виден и нет бликов."
           }
         },
         "si": {
           "stringUnit": {
             "state": "translated",
-            "value": "ලේඛනය කියවිය නොහැක. කරුණාකර නැවත උත්සාහ කරන්න."
+            "value": "ලේඛනයට හොඳින් ආලෝකය වැටෙන බවත්, සම්පූර්ණයෙන් පෙනෙන බවත්, දිලිසීමෙන් තොර බවත් සහතික කර ගන්න."
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dokument sa nepodarilo prečítať. Prosím, skúste znova."
+            "value": "Uistite sa, že je dokument dobre osvetlený, plne viditeľný a bez odleskov."
           }
         },
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dokumenta ni mogoče prebrati. Poskusite znova."
+            "value": "Poskrbite, da bo dokument dobro osvetljen, v celoti viden in brez odsevov."
           }
         },
         "sr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nije moguće očitati dokument. Pokušajte ponovo."
+            "value": "Uverite se da je dokument dobro osvetljen, potpuno vidljiv i bez odsjaja."
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Det gick inte att läsa dokumentet. Försök igen."
+            "value": "Kontrollera att belysningen är god och att hela dokumentet är synligt och fritt från reflektioner."
           }
         },
         "sw": {
           "stringUnit": {
             "state": "translated",
-            "value": "Imeshindwa kusoma hati. Tafadhali jaribu tena."
+            "value": "Hakikisha hati ina mwanga wa kutosha, inaonekana vizuri, na haina mng'ao."
           }
         },
         "th": {
           "stringUnit": {
             "state": "translated",
-            "value": "ไม่สามารถอ่านเอกสาร โปรดลองอีกครั้ง"
+            "value": "ตรวจสอบว่าเอกสารของคุณเห็นได้ครบถ้วนดีและไม่มีแสงสะท้อน"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Belge okunamıyor. Lütfen tekrar dene."
+            "value": "Belgenin iyi aydınlatılmış ve tamamen görünür olmasına ve belge üzerinde bir parlama olmamasına dikkat edin."
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Не вдалося зчитати документ. Будь ласка, спробуйте ще раз."
+            "value": "Переконайтеся, що документ добре освітлений, повністю видимий та без відблисків."
           }
         },
         "ur": {
           "stringUnit": {
             "state": "translated",
-            "value": "دستاویز پڑھنے میں ناکامی۔ براہ کرم دوبارہ کوشش کریں۔"
+            "value": "یقینی بنائیں کہ دستاویز پر مناسب روشنی پڑ رہی ہو، وہ مکمل طور پر نظر آ رہی ہو اور اس پر چمک نہ ہو۔"
           }
         },
         "uz": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hujjatni oʻqish imkonsiz. Qayta urining."
+            "value": "Hujjat yaxshi yoritilgan, toʻliq koʻrinadigan va unda yaltiroq joylar yoʻq ekanligiga ishonch hosil qiling."
           }
         },
         "vi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Không thể đọc tài liệu. Xin vui lòng thử lại."
+            "value": "Đảm bảo giấy tờ được chiếu sáng tốt, có thể nhìn rõ toàn bộ và không bị lóa."
           }
         },
         "yo": {
           "stringUnit": {
             "state": "translated",
-            "value": "A kò rí ìwé àkọsílẹ̀ náà kà. Jọ̀wọ́ tún gbìyànjú."
+            "value": "Ríi dájú pé ìmọ́lẹ̀ tàn sórí ìwé àkọsílẹ̀ náà dáadáa, hàn kedere pátápátá, àti pé kò ní ìtànyòò."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "未能读取文件,请重试。"
+            "value": "确保文件光线充足、完全可见且无眩光。"
           }
         },
         "zh-Hant": {
           "stringUnit": {
             "state": "translated",
-            "value": "無法讀取文件,請再試一次。"
+            "value": "確保文件處於光線充足的環境中、完整入鏡，且沒有反光。"
           }
         }
       }
@@ -30842,7 +30842,7 @@
         "en-GB": {
           "stringUnit": {
             "state": "translated",
-            "value": "Document not recognised"
+            "value": "Document not recognized"
           }
         },
         "es": {
